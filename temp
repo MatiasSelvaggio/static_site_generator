@@ -1,0 +1,83 @@
+"""
+    def test_handle_olist(self):
+        # Input: Markdown block representing an ordered list
+        block = """
+#1. First item
+#2. Second item
+#3. Third item
+"""
+
+        # Expected output: An HTMLNode representing an `<ol>` structure
+        expected_output = HTMLNode(tag="ol", value=[
+            HTMLNode(tag="li", value=["First item"]),
+            HTMLNode(tag="li", value=["Second item"]),
+            HTMLNode(tag="li", value=["Third item"]),
+        ])
+
+        # Actual output: Run your handle_olist function
+        actual_output = handle_olist(block)
+
+        # Assertions
+        self.assertEqual(actual_output.tag, expected_output.tag, "The parent tag should be 'ol'.")
+        self.assertEqual(len(actual_output.value), len(expected_output.value), "There should be the same number of children in the 'value' list.")
+
+        # Compare child nodes
+        for actual_child, expected_child in zip(actual_output.value, expected_output.value):
+            self.assertEqual(actual_child.tag, expected_child.tag, "Each child should have the tag 'li'.")
+            self.assertEqual(actual_child.value, expected_child.value, "The child values should match.")
+
+    def test_handle_ulist(self):
+        # Input: Markdown block representing an ordered list
+        block = """
+#- First item
+#- Second item
+#* Third item
+"""
+
+        # Expected output: An HTMLNode representing an `<ol>` structure
+        expected_output = HTMLNode(tag="ul", value=[
+            HTMLNode(tag="li", value=["First item"]),
+            HTMLNode(tag="li", value=["Second item"]),
+            HTMLNode(tag="li", value=["Third item"]),
+        ])
+
+        # Actual output: Run your handle_olist function
+        actual_output = handle_ulist(block)
+
+        # Assertions
+        self.assertEqual(actual_output.tag, expected_output.tag, "The parent tag should be 'ul'.")
+        self.assertEqual(len(actual_output.value), len(expected_output.value), "There should be the same number of children in the 'value' list.")
+
+        # Compare child nodes
+        for actual_child, expected_child in zip(actual_output.value, expected_output.value):
+            self.assertEqual(actual_child.tag, expected_child.tag, "Each child should have the tag 'li'.")
+            self.assertEqual(actual_child.value, expected_child.value, "The child values should match.")
+
+    def test_handle_code(self):
+        # Input: Markdown block representing a code block
+        block = """
+
+
+"""
+
+        # Expected output: An HTMLNode structure with <pre> and <code> tags
+        expected_output = HTMLNode(tag="pre", value=[
+            HTMLNode(tag="code", value=["def hello():\n    print(\"Hello, World!\")"])
+        ])
+
+        # Actual output: Run your handle_code function
+        actual_output = handle_code(block)
+
+        # Assertions
+        # Check the parent tag is "pre"
+        self.assertEqual(actual_output.tag, expected_output.tag, "The parent tag should be 'pre'.")
+
+        # Check that there is exactly one child in <pre>
+        self.assertEqual(len(actual_output.value), len(expected_output.value), "The 'pre' tag should have exactly one child node.")
+
+        # Check the child is <code> and its value matches the content
+        actual_code_node = actual_output.value[0]
+        expected_code_node = expected_output.value[0]
+        self.assertEqual(actual_code_node.tag, expected_code_node.tag, "The child tag should be 'code'.")
+        self.assertEqual(actual_code_node.value, expected_code_node.value, "The content inside the <code> block should match the expected content.")
+"""
