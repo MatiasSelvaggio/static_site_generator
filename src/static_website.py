@@ -38,9 +38,9 @@ def generate_page(from_path, template_path, dest_path):
     with open(template_path, 'r', encoding='utf-8') as f:
         template_file = f.read()
     
-
-    html_string = markdown_to_html_node(from_file)
-    title = extract_title(html_string)
+    
+    html_string = markdown_to_html_node(from_file).to_html()
+    title = extract_title(from_file)
     final_html = template_file.replace("{{ Title }}", title).replace("{{ Content }}", html_string)
 
     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
@@ -50,3 +50,24 @@ def generate_page(from_path, template_path, dest_path):
 
     print(f"Page successfully generated at {dest_path}")
 
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    print(f"Generating page recursive from {dir_path_content} to {dest_dir_path} using {template_path}")
+    if not os.path.exists(dir_path_content):
+        raise Exception("invalid from path")
+    if not os.path.exists(template_path) and not os.path.isfile(template_path):
+        raise Exception("invalid template path")
+
+    os.makedirs(dest_dir_path, exist_ok=True)
+
+    list_dir = os.listdir(dir_path_content)
+    
+    for item in list_dir:
+
+        source_path = os.path.join(dir_path_content, item)
+        dest_path = os.path.join(dest_dir_path, item)
+        if ( os.path.isfile(source_path)):
+            if source_path.endswith(".md"):
+                dest_path = os.path.splitext(dest_path)[0] + ".html"
+            generate_page(source_path, template_path, dest_path.replace("md","html"))
+        else:
+            generate_pages_recursive(source_path, template_path, dest_path)

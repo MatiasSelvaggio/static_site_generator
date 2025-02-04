@@ -156,7 +156,7 @@ def handle_code(block):
     text = block[4:-3]
     children = text_to_children(text)
     tag = "pre"
-    code_node = ParentNode(tag="code", value=children)
+    code_node = ParentNode("code",children)
     return ParentNode(tag,[code_node])
 
 def handle_ulist(block):
