@@ -176,3 +176,12 @@ def handle_olist(block):
         children = text_to_children(text)
         html_items.append(ParentNode("li", children))
     return ParentNode("ol", html_items)
+
+def extract_title(markdown):
+    blocks =  markdown_to_blocks(markdown)
+    for block in blocks:
+        type = block_to_block_type(block)
+        if(type == block_type_heading):
+            if block.startswith("# "):
+                return block.lstrip("# ").strip()
+    raise Exception("there is not a h1 header")
